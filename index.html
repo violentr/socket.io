@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Websocket Example</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js" integrity="sha512-iZIBSs+gDyTH0ZhUem9eQ1t4DcEn2B9lHxfRMeGQhyNdSUz+rb+5A3ummX6DQTOIs1XK0gOteOg/LPtSo9VJ+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body onload="websocket()">
+  <h1>Websocket Project</h1>
+  <form id ="form" action="/" method="get">
+    <label for="fname">Message</label>
+    <input type="text" id="m" name="m"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+  <div id="messages"></div>
+</body>
+<script>
+  let websocket = function () {
+    const socket = io();
+    document.getElementById("form").addEventListener("submit", function(e){
+      e.preventDefault();
+      // console.log("DATA", JSON.stringify(e))
+      // debugger
+      let message = document.getElementById('m')
+      if(message.value){
+          console.log("Submited" , message.value)
+          socket.emit('chat message', message.value);
+          message.value = ""
+        }
+    });
+    socket.on('chat message', function(msg){
+        let listItem = document.createElement("li")
+        listItem.textContent = msg
+        document.getElementById('messages').appendChild(listItem);
+    });
+  };
+</script>
+</html>
