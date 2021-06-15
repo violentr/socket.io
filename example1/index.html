@@ -12,30 +12,31 @@
     <input type="text" id="m" name="m"><br><br>
     <input type="submit" value="Submit">
   </form>
+  <h2>Received messages</h2>
   <div id="messages"></div>
 </body>
 <script>
   let websocket = function () {
-    const mySpace = io('/my-space');
+    const mySpace = io.connect('/my-space');
     const socket = io();
+    let nameSpace = window.location.search.includes("space")
+    let channel = nameSpace ? "my space" : "chat message"
+    let selectedSocket = nameSpace ? mySpace : socket
 
     document.getElementById("form").addEventListener("submit", function(e){
       e.preventDefault();
       let message = document.getElementById('m')
-      let nameSpace = window.location.search.includes("space")
-      let choosenSocket = nameSpace ? mySpace : socket
       if(message.value){
           console.log("Submited" , message.value)
-          let channel = nameSpace ? "my space" : "chat message"
-          choosenSocket.emit(channel, message.value);
+          selectedSocket.emit(channel, message.value);
           message.value = ""
         }
-    });
-    socket.on('my space', function(msg){
-        let listItem = document.createElement("li")
-        listItem.textContent = msg
-        document.getElementById('messages').appendChild(listItem);
-    });
-  };
+        selectedSocket.on(channel, function(msg){
+            let listItem = document.createElement("li")
+            listItem.textContent = msg
+            document.getElementById('messages').appendChild(listItem);
+          });
+      });
+    };
 </script>
 </html>
