@@ -16,19 +16,22 @@
 </body>
 <script>
   let websocket = function () {
+    const mySpace = io('/my-space');
     const socket = io();
+
     document.getElementById("form").addEventListener("submit", function(e){
       e.preventDefault();
-      // console.log("DATA", JSON.stringify(e))
-      // debugger
       let message = document.getElementById('m')
+      let nameSpace = window.location.search.includes("space")
+      let choosenSocket = nameSpace ? mySpace : socket
       if(message.value){
           console.log("Submited" , message.value)
-          socket.emit('chat message', message.value);
+          let channel = nameSpace ? "my space" : "chat message"
+          choosenSocket.emit(channel, message.value);
           message.value = ""
         }
     });
-    socket.on('chat message', function(msg){
+    socket.on('my space', function(msg){
         let listItem = document.createElement("li")
         listItem.textContent = msg
         document.getElementById('messages').appendChild(listItem);
